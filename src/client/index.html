@@ -1,21 +1,40 @@
 <!DOCTYPE html>
 <html>
   <head>
-    </head>
+    <style>
+      .me {
+        color: #FF0000;
+      }
+    </style>
+  </head>
   <body>
-    <input type="button" value="Get Time" />
+    <div>
+      Name: <input type="text" id="username" />
+    </div>
+    <div>
+      <input type="text" id="chat" />
+      <input type="button" value="Say it!" />
+    </div>
+    <h4>Chat log</h4>
+    <div id="chatText">
+
+    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io.connect('http://localhost');
-      
-      socket.on('time event', function(data) {
-        alert(data.time);
+
+      socket.on('chat text', function(data) {
+          $("<div>").text(data.userName + ": " + data.chatText).appendTo("#chatText");
       });
 
       $(function() {
-        $("input").click(function() {
-          socket.emit('click event', { function: 'time' });
+        $("input[type='button']").click(function() {
+          var text = document.getElementById("chat").value;
+          var name = document.getElementById("username").value;
+          var data = { userName: name, chatText: text };
+          $("<div>").text(data.userName + ": " + data.chatText).addClass("me").appendTo("#chatText");
+          socket.emit('chat', data);
         });
       });
     </script>

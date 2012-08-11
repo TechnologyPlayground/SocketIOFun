@@ -18,9 +18,7 @@ function handler (req, res) {
 }
 
 io.sockets.on('connection', function (socket) {
-  socket.on('click event', function(data) {
-    if (data.function == 'time') {
-      socket.emit('time event', {time: new Date()});
-    }
+  socket.on('chat', function(data) {
+    socket.broadcast.emit('chat text', data);
   });
 });
